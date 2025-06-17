@@ -1,18 +1,4 @@
-.App {
-  text-align: center;
-  margin-top: 100px;
-  font-family: Arial, sans-serif;
-}
 
-input {
-  padding: 10px;
-  width: 250px;
-  font-size: 16px;
-}
-
-button {
-  padding: 10px 20px;
-  margin-left: 10px;
-  font-size: 16px;
-  cursor: pointer;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

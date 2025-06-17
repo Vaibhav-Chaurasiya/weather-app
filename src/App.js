@@ -1,49 +1,54 @@
-import React, { useState } from 'react';
-import WeatherCard from './components/WeatherCard';
+import React, { useState } from "react";
+import axios from "axios";
+import WeatherCard from "./WeatherCard";
+import moment from "moment";
 
-const API_KEY = "f237aa1fe2e1a2c8d6b55b5e86d19ce6";  // <-- Yaha apna OpenWeatherMap API key dalna!
-
-function App() {
-  const [city, setCity] = useState('');
+const App = () => {
+  const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
+  const [error, setError] = useState("");
+
+  const API_KEY = "f237aa1fe2e1a2c8d6b55b5e86d19ce6"; 
 
   const fetchWeather = async () => {
-    if (!city) return;
     try {
-      const response = await fetch(
+      const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
       );
-      if (!response.ok) throw new Error("City not found");
-      const data = await response.json();
-      setWeatherData(data);
-    } catch (error) {
-      alert(error.message);
+      setWeatherData(response.data);
+      setError("");
+    } catch (err) {
+      setError("City not found!");
+      setWeatherData(null);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center flex-col p-4">
-      <h1 className="text-4xl font-bold mb-8 text-white">🌦 Pro Weather App</h1>
-      
-      <div className="flex space-x-2 mb-8">
-        <input
-          type="text"
-          placeholder="Enter city name"
-          className="p-3 rounded-xl border focus:outline-none"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-        />
-        <button
-          onClick={fetchWeather}
-          className="p-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition"
-        >
-          Search
-        </button>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-600 to-blue-500">
+      <div className="bg-white bg-opacity-20 backdrop-blur-lg rounded-3xl shadow-lg p-8 w-full max-w-md">
+        <h1 className="text-3xl font-bold text-white mb-6 flex items-center justify-center">
+          🌤️ Weather App
+        </h1>
+        <div className="flex mb-6">
+          <input
+            type="text"
+            placeholder="Enter city name"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="flex-1 px-4 py-2 rounded-l-lg focus:outline-none"
+          />
+          <button
+            onClick={fetchWeather}
+            className="bg-blue-700 text-white px-4 py-2 rounded-r-lg"
+          >
+            Search
+          </button>
+        </div>
+        {error && <p className="text-red-600">{error}</p>}
+        {weatherData && <WeatherCard weatherData={weatherData} />}
       </div>
-
-      <WeatherCard weatherData={weatherData} />
     </div>
   );
-}
+};
 
 export default App;
